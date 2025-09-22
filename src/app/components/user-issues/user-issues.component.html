@@ -1,0 +1,127 @@
+<div class="container my-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">📋 User Issues</h2>
+    <div>
+      <input type="text" class="form-control d-inline-block me-2" placeholder="Search..."
+             style="width: 200px" [(ngModel)]="searchText" (input)="applyFilter()">
+      <button class="btn btn-outline-success me-2" (click)="exportToExcel()">
+        <i class="bi bi-file-earmark-excel"></i> Export
+      </button>
+      <button class="btn btn-outline-primary" (click)="loadIssues()">
+        <i class="bi bi-arrow-clockwise"></i> Reload
+      </button>
+    </div>
+  </div>
+
+  <!-- Alerts -->
+  <div *ngIf="message" class="alert" [ngClass]="'alert-' + message.type">
+    {{ message.text }}
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2">Loading data...</p>
+  </div>
+
+  <!-- Add New Issue Form -->
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+      ➕ Add New Issue
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="addIssue()" #f="ngForm" class="row g-3">
+
+        <div class="col-md-4">
+          <label class="form-label">Customer Name</label>
+          <input [(ngModel)]="newIssue.customerName" name="customerName" class="form-control">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Brand</label>
+          <input [(ngModel)]="newIssue.brand" name="brand" class="form-control">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Model</label>
+          <input [(ngModel)]="newIssue.model" name="model" class="form-control">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Serial</label>
+          <input [(ngModel)]="newIssue.serial" name="serial" class="form-control">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Bill</label>
+          <input [(ngModel)]="newIssue.bill" name="bill" type="number" class="form-control">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Bill Date</label>
+          <input [(ngModel)]="newIssue.billDate" name="billDate" type="date" class="form-control">
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Repair Description</label>
+          <textarea [(ngModel)]="newIssue.repairDescription" name="repairDescription" rows="2" class="form-control"></textarea>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Customer Name (PLO)</label>
+          <input [(ngModel)]="newIssue.customerNameInPLO" name="customerNameInPLO" class="form-control">
+        </div>
+
+        <div class="col-md-6 d-flex align-items-end justify-content-end">
+          <button type="submit" class="btn btn-success px-4">
+            <i class="bi bi-plus-circle"></i> Add Issue
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Issues Table -->
+  <div class="card">
+    <div class="card-header bg-dark text-white">Existing Issues</div>
+    <div class="table-responsive">
+      <table class="table table-striped align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th *ngFor="let h of headers">{{ h }}</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let issue of pagedIssues">
+            <td><input [(ngModel)]="issue.id" class="form-control form-control-sm"></td>
+            <td><input [(ngModel)]="issue.status" class="form-control form-control-sm"></td>
+            <td><input [(ngModel)]="issue.billDate" type="date" class="form-control form-control-sm"></td>
+            <td><input [(ngModel)]="issue.customerName" class="form-control form-control-sm"></td>
+            <td><input [(ngModel)]="issue.brand" class="form-control form-control-sm"></td>
+            <td><input [(ngModel)]="issue.model" class="form-control form-control-sm"></td>
+            <td><input [(ngModel)]="issue.serial" class="form-control form-control-sm"></td>
+            <td><input [(ngModel)]="issue.bill" type="number" class="form-control form-control-sm"></td>
+            <td><input [(ngModel)]="issue.repairDescription" class="form-control form-control-sm"></td>
+            <td><input [(ngModel)]="issue.customerNameInPLO" class="form-control form-control-sm"></td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-success me-1" (click)="updateIssue(issue)"><i class="bi bi-save"></i></button>
+              <button class="btn btn-sm btn-danger" (click)="deleteIssue(issue)"><i class="bi bi-trash"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="d-flex justify-content-between align-items-center p-2">
+      <span>Page {{ currentPage }} / {{ totalPages }}</span>
+      <div>
+        <button class="btn btn-outline-secondary btn-sm me-1" (click)="prevPage()" [disabled]="currentPage === 1">&laquo; Prev</button>
+        <button class="btn btn-outline-secondary btn-sm" (click)="nextPage()" [disabled]="currentPage === totalPages">Next &raquo;</button>
+      </div>
+    </div>
+
+  </div>
+</div>
